@@ -1,0 +1,3813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cyborg Hunter Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           max-width: 1200px; margin: 0 auto; padding: 20px; color: #333; background: #fafafa; }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    h2 { font-size: 18px; margin: 24px 0 12px; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+    h3 { font-size: 16px; margin-bottom: 8px; }
+    .dashboard { display: flex; gap: 16px; margin: 16px 0; }
+    .card { background: white; border: 1px solid #ddd; border-radius: 8px;
+            padding: 16px; flex: 1; text-align: center; }
+    .card .number { font-size: 32px; font-weight: bold; }
+    .card.hard .number { color: #d32f2f; }
+    .card.soft .number { color: #f57c00; }
+    .card.clean .number { color: #388e3c; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; background: white; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f5f5f5; cursor: pointer; user-select: none; }
+    th:hover { background: #e0e0e0; }
+    tr.hard { background: #ffebee; }
+    tr.soft { background: #fff3e0; }
+    tr.clean { background: #e8f5e9; }
+    tr:hover { background: #e3f2fd; cursor: pointer; }
+    .participant { background: white; border: 1px solid #ddd; border-radius: 8px;
+                   padding: 16px; margin: 12px 0; }
+    .stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; }
+    .stats span { background: #f5f5f5; padding: 4px 8px; border-radius: 4px; font-size: 13px; }
+    .reason { color: #666; font-size: 13px; margin: 8px 0; }
+    .images img { max-width: 100%; height: auto; margin: 8px 0; border: 1px solid #eee; border-radius: 4px; }
+    .note { color: #999; font-style: italic; font-size: 13px; }
+    .meta { color: #999; font-size: 12px; margin-top: 24px; }
+    .session-col { text-align: center; font-variant-numeric: tabular-nums; }
+    th.session-col { background: #eef3ff; }
+    .session-signals { background: #fff8e1; border: 1px solid #f0d080; border-radius: 6px;
+                       padding: 12px; margin: 12px 0; font-size: 13px; }
+    .session-signals h4 { font-size: 14px; margin-bottom: 8px; color: #a06000; }
+    .session-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .session-signals ul { margin-left: 16px; font-size: 12px; }
+    .session-signals code { background: #ffeaaa; padding: 1px 4px; border-radius: 3px; }
+    .muted { color: #888; font-size: 12px; }
+    .back-to-top { position: fixed; bottom: 16px; right: 16px; padding: 8px 12px; background: #333; color: #fff; border-radius: 4px; text-decoration: none; opacity: 0.85; font-size: 13px; z-index: 100; }
+    .back-to-top:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <a id="top"></a>
+  <h1>Cyborg Hunter Report</h1>
+  <p class="note">v0.3.0 &mdash; 100 participants</p>
+
+  <div class="dashboard">
+    <div class="card hard">
+      <div class="number">6</div>
+      <div>Hard signals</div>
+    </div>
+    <div class="card soft">
+      <div class="number">12</div>
+      <div>Soft flagged</div>
+    </div>
+    <div class="card clean">
+      <div class="number">82</div>
+      <div>Clean</div>
+    </div>
+  </div>
+
+  <h2>Triage — Ranked by Suspiciousness</h2>
+  <table id="triage-table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0, 'num')">Rank</th>
+        <th onclick="sortTable(1, 'str')">Participant</th>
+        <th onclick="sortTable(2, 'num')">Score</th>
+        <th onclick="sortTable(3, 'str')">Hard</th>
+        <th class="session-col" onclick="sortTable(4, 'num')" title="AI extensions found">Ext</th>
+        <th class="session-col" onclick="sortTable(5, 'num')" title="Sidebar events (DOM gaps)">Sidebar</th>
+        <th class="session-col" onclick="sortTable(6, 'num')" title="DevTools-ish keyboard shortcuts">Kb</th>
+        <th class="session-col" onclick="sortTable(7, 'num')" title="Layout shifts + zoom changes">Layout</th>
+        <th onclick="sortTable(8, 'str')">Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="soft" onclick="scrollToParticipant('67c1d6d98c8787be36609212')">
+      <td>1</td>
+      <td>67c1d6d98c8787be36609212</td>
+      <td>4078</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 tab-aways; fast typing on 9 trials; 1015 synthetic insertions</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('69bc21dd22f17b2337957511')">
+      <td>2</td>
+      <td>69bc21dd22f17b2337957511</td>
+      <td>179</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">3</td>
+      <td class="session-col">0</td>
+      <td class="session-col">21</td>
+      <td>21 paste events; 3 copy events; 12 tab-aways; 3 sidebar events; 21 layout shifts; 8 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69b9f3184e0896ef41b99aa8')">
+      <td>3</td>
+      <td>69b9f3184e0896ef41b99aa8</td>
+      <td>152</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>38 synthetic insertions</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('5d350282cec7150015d16494')">
+      <td>4</td>
+      <td>5d350282cec7150015d16494</td>
+      <td>131</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>5 paste events; 10 copy events; 42 tab-aways</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('696a9773a84c5f9d4a930874')">
+      <td>5</td>
+      <td>696a9773a84c5f9d4a930874</td>
+      <td>128</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">7</td>
+      <td>15 paste events; 43 tab-aways; 5 layout shifts; 2 zoom changes</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('69b594dccc64df571f092147')">
+      <td>6</td>
+      <td>69b594dccc64df571f092147</td>
+      <td>123</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>12 paste events; 20 tab-aways; 2 synthetic insertions</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('69cd5149cf6fc07126897938')">
+      <td>7</td>
+      <td>69cd5149cf6fc07126897938</td>
+      <td>120</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>15 paste events; 1 copy events; 37 tab-aways</td>
+    </tr>
+<tr class="hard" onclick="scrollToParticipant('6314bc49055e150c92f4736e')">
+      <td>8</td>
+      <td>6314bc49055e150c92f4736e</td>
+      <td>112</td>
+      <td><strong>YES</strong></td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>12 paste events; 63 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6998ebccba55eac8b0cf68bf')">
+      <td>9</td>
+      <td>6998ebccba55eac8b0cf68bf</td>
+      <td>66</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>4 tab-aways; 16 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('697ed59824964096e537d7d3')">
+      <td>10</td>
+      <td>697ed59824964096e537d7d3</td>
+      <td>39</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>16 copy events; 30 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('5c309bb410677f0001dda0ed')">
+      <td>11</td>
+      <td>5c309bb410677f0001dda0ed</td>
+      <td>21</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>4 tab-aways; 5 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('656f366a539cf734f6c2bd27')">
+      <td>12</td>
+      <td>656f366a539cf734f6c2bd27</td>
+      <td>21</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">2</td>
+      <td class="session-col">0</td>
+      <td class="session-col">11</td>
+      <td>1 copy events; 2 tab-aways; 2 sidebar events; 11 layout shifts</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('698639d278e0d8c2d7d4d26e')">
+      <td>13</td>
+      <td>698639d278e0d8c2d7d4d26e</td>
+      <td>20</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>5 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('6604664cb53a76971c8a1dce')">
+      <td>14</td>
+      <td>6604664cb53a76971c8a1dce</td>
+      <td>18</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>19 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('674bea1eb044fbe75795fef1')">
+      <td>15</td>
+      <td>674bea1eb044fbe75795fef1</td>
+      <td>18</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 copy events; 4 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('6991551b7b0c4970e11f07db')">
+      <td>16</td>
+      <td>6991551b7b0c4970e11f07db</td>
+      <td>17</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>58 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69695461bdac36c31832f4a5')">
+      <td>17</td>
+      <td>69695461bdac36c31832f4a5</td>
+      <td>16</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>4 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('672bbb444ab4546a33718004')">
+      <td>18</td>
+      <td>672bbb444ab4546a33718004</td>
+      <td>15</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>22 tab-aways</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('65ccca52871269168cc029b5')">
+      <td>19</td>
+      <td>65ccca52871269168cc029b5</td>
+      <td>14</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>4 tab-aways; fast typing on 3 trials; 2 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('628f827eeb876ed2617881e7')">
+      <td>20</td>
+      <td>628f827eeb876ed2617881e7</td>
+      <td>13</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">1</td>
+      <td class="session-col">0</td>
+      <td class="session-col">2</td>
+      <td>8 tab-aways; 1 sidebar event; 2 layout shifts; 1 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('67a8ef6331f586a361a8ec33')">
+      <td>21</td>
+      <td>67a8ef6331f586a361a8ec33</td>
+      <td>13</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>32 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('583ef6f5ad2f4300014b358d')">
+      <td>22</td>
+      <td>583ef6f5ad2f4300014b358d</td>
+      <td>12</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 tab-aways; 3 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('663b810a9d37219004ad9fbd')">
+      <td>23</td>
+      <td>663b810a9d37219004ad9fbd</td>
+      <td>12</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>17 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('673feeafa80a279f5cc63e33')">
+      <td>24</td>
+      <td>673feeafa80a279f5cc63e33</td>
+      <td>12</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('607668ac450fc6e3025a131d')">
+      <td>25</td>
+      <td>607668ac450fc6e3025a131d</td>
+      <td>10</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>13 tab-aways</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('654beb18b762f5afea837c8b')">
+      <td>26</td>
+      <td>654beb18b762f5afea837c8b</td>
+      <td>8</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 copy events; 9 tab-aways</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('6978bda2039ef7c2454998b0')">
+      <td>27</td>
+      <td>6978bda2039ef7c2454998b0</td>
+      <td>8</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>13 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('5d5a48a67ca41f0001e97f8b')">
+      <td>28</td>
+      <td>5d5a48a67ca41f0001e97f8b</td>
+      <td>7</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 tab-aways; fast typing on 1 trials; 1 synthetic insertions</td>
+    </tr>
+<tr class="soft" onclick="scrollToParticipant('695ba87da7fb579427f4b67c')">
+      <td>29</td>
+      <td>695ba87da7fb579427f4b67c</td>
+      <td>6</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>fast typing on 3 trials</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('663ece769c3a32475d274c94')">
+      <td>30</td>
+      <td>663ece769c3a32475d274c94</td>
+      <td>4</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66f58c9493251ae2f43ef088')">
+      <td>31</td>
+      <td>66f58c9493251ae2f43ef088</td>
+      <td>4</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways; 1 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('676f0bdedfb3362f560115f0')">
+      <td>32</td>
+      <td>676f0bdedfb3362f560115f0</td>
+      <td>4</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways; fast typing on 2 trials</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('678e7fc78628897e2a92bd42')">
+      <td>33</td>
+      <td>678e7fc78628897e2a92bd42</td>
+      <td>4</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>5 tab-aways; fast typing on 1 trials</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69b2dfa3578726afc01d223c')">
+      <td>34</td>
+      <td>69b2dfa3578726afc01d223c</td>
+      <td>4</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 synthetic insertions</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66c3366a3b5834b89124e85a')">
+      <td>35</td>
+      <td>66c3366a3b5834b89124e85a</td>
+      <td>3</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6614a5298c82365421d9b0b9')">
+      <td>36</td>
+      <td>6614a5298c82365421d9b0b9</td>
+      <td>2</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('664ec4ec38b0fba80d81b607')">
+      <td>37</td>
+      <td>664ec4ec38b0fba80d81b607</td>
+      <td>2</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('695ed617f5fe15c661e8e5f8')">
+      <td>38</td>
+      <td>695ed617f5fe15c661e8e5f8</td>
+      <td>2</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>8 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6990045689cf6bafc0d83c99')">
+      <td>39</td>
+      <td>6990045689cf6bafc0d83c99</td>
+      <td>2</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 copy events; 2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69ae70d4471a238f4194f006')">
+      <td>40</td>
+      <td>69ae70d4471a238f4194f006</td>
+      <td>2</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">2</td>
+      <td>1 layout shifts; 1 zoom changes</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('657619485d6869976045a220')">
+      <td>41</td>
+      <td>657619485d6869976045a220</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66d1fdd400acfdbc181f41e0')">
+      <td>42</td>
+      <td>66d1fdd400acfdbc181f41e0</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('67ac5678d6ff3c43d30b333f')">
+      <td>43</td>
+      <td>67ac5678d6ff3c43d30b333f</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">1</td>
+      <td>1 layout shifts</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('696a7d8e7ecb7691c3c716e0')">
+      <td>44</td>
+      <td>696a7d8e7ecb7691c3c716e0</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>4 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6994625b36e05aa72306754b')">
+      <td>45</td>
+      <td>6994625b36e05aa72306754b</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6996e597cd2cb88b8ce0fcd7')">
+      <td>46</td>
+      <td>6996e597cd2cb88b8ce0fcd7</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">1</td>
+      <td>1 layout shifts</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69ab2b85eb4738c7033037f5')">
+      <td>47</td>
+      <td>69ab2b85eb4738c7033037f5</td>
+      <td>1</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('5c5198da659655000168955d')">
+      <td>48</td>
+      <td>5c5198da659655000168955d</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('5d453e8723a5bb0001492546')">
+      <td>49</td>
+      <td>5d453e8723a5bb0001492546</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('5e836a3c2598d409928dae31')">
+      <td>50</td>
+      <td>5e836a3c2598d409928dae31</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6089714497c6a46ebdf12234')">
+      <td>51</td>
+      <td>6089714497c6a46ebdf12234</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6127c5e5db9bf1a49993c300')">
+      <td>52</td>
+      <td>6127c5e5db9bf1a49993c300</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('616c1cc2510fe9022f6577f8')">
+      <td>53</td>
+      <td>616c1cc2510fe9022f6577f8</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('629e1738fcc7d0b6acfe5280')">
+      <td>54</td>
+      <td>629e1738fcc7d0b6acfe5280</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('62e7357284e65421d8f8b10f')">
+      <td>55</td>
+      <td>62e7357284e65421d8f8b10f</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('655f9bb3070d42d4bc67e866')">
+      <td>56</td>
+      <td>655f9bb3070d42d4bc67e866</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('65959bfed43a65c4d24b7445')">
+      <td>57</td>
+      <td>65959bfed43a65c4d24b7445</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('65aed1505908860daee048ce')">
+      <td>58</td>
+      <td>65aed1505908860daee048ce</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('660a807bfd49ee4957fad189')">
+      <td>59</td>
+      <td>660a807bfd49ee4957fad189</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66312361cf5d4099e1330532')">
+      <td>60</td>
+      <td>66312361cf5d4099e1330532</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6636db94fa3ed150c2d78447')">
+      <td>61</td>
+      <td>6636db94fa3ed150c2d78447</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('669ed03f13f57e07092e1877')">
+      <td>62</td>
+      <td>669ed03f13f57e07092e1877</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66a9843c53827f826e9738ed')">
+      <td>63</td>
+      <td>66a9843c53827f826e9738ed</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('66aa83dd5d34973838c99ad3')">
+      <td>64</td>
+      <td>66aa83dd5d34973838c99ad3</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('67055b370e3c0c4965a03128')">
+      <td>65</td>
+      <td>67055b370e3c0c4965a03128</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('671e55aeca0216c5762de35a')">
+      <td>66</td>
+      <td>671e55aeca0216c5762de35a</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 paste events; 2 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('672adb2909ca72744f212a7d')">
+      <td>67</td>
+      <td>672adb2909ca72744f212a7d</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('674cca92742faa4642a6e9c7')">
+      <td>68</td>
+      <td>674cca92742faa4642a6e9c7</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('674f7e1ff586e9a262cf1a06')">
+      <td>69</td>
+      <td>674f7e1ff586e9a262cf1a06</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6751acc5dc78128951a34f1f')">
+      <td>70</td>
+      <td>6751acc5dc78128951a34f1f</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('677325421675c69275202d2d')">
+      <td>71</td>
+      <td>677325421675c69275202d2d</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('67758b914f06b14a31669644')">
+      <td>72</td>
+      <td>67758b914f06b14a31669644</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('678a880bfee0c5ee7400ac1b')">
+      <td>73</td>
+      <td>678a880bfee0c5ee7400ac1b</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('67c869872204b85d6c4c0749')">
+      <td>74</td>
+      <td>67c869872204b85d6c4c0749</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('67f02740d233a50f479c4e20')">
+      <td>75</td>
+      <td>67f02740d233a50f479c4e20</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6941ad1c7e8b932ff5e7e7ee')">
+      <td>76</td>
+      <td>6941ad1c7e8b932ff5e7e7ee</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6942e1d634d37d8b56f47144')">
+      <td>77</td>
+      <td>6942e1d634d37d8b56f47144</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6970cdebc8c497d744a5381d')">
+      <td>78</td>
+      <td>6970cdebc8c497d744a5381d</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('697cac7d3bedace54477eb48')">
+      <td>79</td>
+      <td>697cac7d3bedace54477eb48</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('697cfc324ea85aa42cfe2d1e')">
+      <td>80</td>
+      <td>697cfc324ea85aa42cfe2d1e</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('697ee21d810562534a148c96')">
+      <td>81</td>
+      <td>697ee21d810562534a148c96</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('698158ae43afcea4f821069c')">
+      <td>82</td>
+      <td>698158ae43afcea4f821069c</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6985f4fbf0d138e1b1231702')">
+      <td>83</td>
+      <td>6985f4fbf0d138e1b1231702</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69869e412b0c8dcba46bfc1e')">
+      <td>84</td>
+      <td>69869e412b0c8dcba46bfc1e</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('698d21c653f9cfdb05a407bf')">
+      <td>85</td>
+      <td>698d21c653f9cfdb05a407bf</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('699256aeba8067767183a7cb')">
+      <td>86</td>
+      <td>699256aeba8067767183a7cb</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>3 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('6995b9e346fe1f796fe97714')">
+      <td>87</td>
+      <td>6995b9e346fe1f796fe97714</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('699639261d37728e7e93d15d')">
+      <td>88</td>
+      <td>699639261d37728e7e93d15d</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('699f8d117bdd818763e3d681')">
+      <td>89</td>
+      <td>699f8d117bdd818763e3d681</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69a0734d1d433d3694c8438f')">
+      <td>90</td>
+      <td>69a0734d1d433d3694c8438f</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69a5173e79a786eadc643c31')">
+      <td>91</td>
+      <td>69a5173e79a786eadc643c31</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>1 tab-aways</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69a5fc5bad47d7743c2f5272')">
+      <td>92</td>
+      <td>69a5fc5bad47d7743c2f5272</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69ac7aca3a3e9276cf2c2499')">
+      <td>93</td>
+      <td>69ac7aca3a3e9276cf2c2499</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69b306d0aabcb968f7ca7ec5')">
+      <td>94</td>
+      <td>69b306d0aabcb968f7ca7ec5</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69bea3c85966363463cb1745')">
+      <td>95</td>
+      <td>69bea3c85966363463cb1745</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69c4aeb0b0f33c156c6d7558')">
+      <td>96</td>
+      <td>69c4aeb0b0f33c156c6d7558</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69c537b07e8a80ec37477bd4')">
+      <td>97</td>
+      <td>69c537b07e8a80ec37477bd4</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69c55b66d8ade7f9bd6109d6')">
+      <td>98</td>
+      <td>69c55b66d8ade7f9bd6109d6</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69c5d21edb1054599e74d625')">
+      <td>99</td>
+      <td>69c5d21edb1054599e74d625</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+<tr class="clean" onclick="scrollToParticipant('69c70b2ae3a40492f22627e3')">
+      <td>100</td>
+      <td>69c70b2ae3a40492f22627e3</td>
+      <td>0</td>
+      <td>no</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td class="session-col">0</td>
+      <td>clean</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>Participant Details</h2>
+  
+    <section class="participant" id="p-67c1d6d98c8787be36609212">
+      <h3>67c1d6d98c8787be36609212</h3>
+      <div class="stats">
+        <span>Score: <strong>4078</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 3</span>
+        <span>Fast typing: 9</span>
+        <span>Soft score (session): <strong>18</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 tab-aways; fast typing on 9 trials; 1015 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67c1d6d98c8787be36609212.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67c1d6d98c8787be36609212.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67c1d6d98c8787be36609212.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69bc21dd22f17b2337957511">
+      <h3>69bc21dd22f17b2337957511</h3>
+      <div class="stats">
+        <span>Score: <strong>179</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 21</span>
+        <span>Tab-aways: 12</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>17</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 3</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">21 paste events; 3 copy events; 12 tab-aways; 3 sidebar events; 21 layout shifts; 8 synthetic insertions</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          <div><strong>Sidebar events (3):</strong><ul><li><code>921217</code> — gap 389px</li><li><code>923219</code> — <em>closing sidebar</em> (2.0s open)</li><li><code>3508130</code> — gap 423px</li></ul></div>
+          
+          <div><strong>Other:</strong><ul>
+            <li>21 layout shifts</li>
+            
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_69bc21dd22f17b2337957511.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69bc21dd22f17b2337957511.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69bc21dd22f17b2337957511.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69b9f3184e0896ef41b99aa8">
+      <h3>69b9f3184e0896ef41b99aa8</h3>
+      <div class="stats">
+        <span>Score: <strong>152</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">38 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69b9f3184e0896ef41b99aa8.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69b9f3184e0896ef41b99aa8.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69b9f3184e0896ef41b99aa8.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5d350282cec7150015d16494">
+      <h3>5d350282cec7150015d16494</h3>
+      <div class="stats">
+        <span>Score: <strong>131</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 5</span>
+        <span>Tab-aways: 42</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>31</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">5 paste events; 10 copy events; 42 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5d350282cec7150015d16494.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5d350282cec7150015d16494.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5d350282cec7150015d16494.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-696a9773a84c5f9d4a930874">
+      <h3>696a9773a84c5f9d4a930874</h3>
+      <div class="stats">
+        <span>Score: <strong>128</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 15</span>
+        <span>Tab-aways: 43</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>21</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">15 paste events; 43 tab-aways; 5 layout shifts; 2 zoom changes</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          
+          
+          <div><strong>Other:</strong><ul>
+            <li>5 layout shifts</li>
+            <li>2 zoom changes</li>
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_696a9773a84c5f9d4a930874.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_696a9773a84c5f9d4a930874.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_696a9773a84c5f9d4a930874.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69b594dccc64df571f092147">
+      <h3>69b594dccc64df571f092147</h3>
+      <div class="stats">
+        <span>Score: <strong>123</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 12</span>
+        <span>Tab-aways: 20</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>15</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">12 paste events; 20 tab-aways; 2 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69b594dccc64df571f092147.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69b594dccc64df571f092147.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69b594dccc64df571f092147.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69cd5149cf6fc07126897938">
+      <h3>69cd5149cf6fc07126897938</h3>
+      <div class="stats">
+        <span>Score: <strong>120</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 15</span>
+        <span>Tab-aways: 37</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>20</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">15 paste events; 1 copy events; 37 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69cd5149cf6fc07126897938.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69cd5149cf6fc07126897938.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69cd5149cf6fc07126897938.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6314bc49055e150c92f4736e">
+      <h3>6314bc49055e150c92f4736e</h3>
+      <div class="stats">
+        <span>Score: <strong>112</strong></span>
+        <span>Hard: <strong>YES</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 12</span>
+        <span>Tab-aways: 63</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>12</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">12 paste events; 63 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6314bc49055e150c92f4736e.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6314bc49055e150c92f4736e.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6314bc49055e150c92f4736e.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6998ebccba55eac8b0cf68bf">
+      <h3>6998ebccba55eac8b0cf68bf</h3>
+      <div class="stats">
+        <span>Score: <strong>66</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 4</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">4 tab-aways; 16 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6998ebccba55eac8b0cf68bf.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6998ebccba55eac8b0cf68bf.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6998ebccba55eac8b0cf68bf.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-697ed59824964096e537d7d3">
+      <h3>697ed59824964096e537d7d3</h3>
+      <div class="stats">
+        <span>Score: <strong>39</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 30</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>39</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">16 copy events; 30 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_697ed59824964096e537d7d3.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_697ed59824964096e537d7d3.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_697ed59824964096e537d7d3.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5c309bb410677f0001dda0ed">
+      <h3>5c309bb410677f0001dda0ed</h3>
+      <div class="stats">
+        <span>Score: <strong>21</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 4</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">4 tab-aways; 5 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5c309bb410677f0001dda0ed.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5c309bb410677f0001dda0ed.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5c309bb410677f0001dda0ed.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-656f366a539cf734f6c2bd27">
+      <h3>656f366a539cf734f6c2bd27</h3>
+      <div class="stats">
+        <span>Score: <strong>21</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>4</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 2</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 copy events; 2 tab-aways; 2 sidebar events; 11 layout shifts</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          <div><strong>Sidebar events (2):</strong><ul><li><code>726477.0999999996</code> — gap 403px</li><li><code>772477.5999999996</code> — <em>closing sidebar</em> (46.0s open)</li></ul></div>
+          
+          <div><strong>Other:</strong><ul>
+            <li>11 layout shifts</li>
+            
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_656f366a539cf734f6c2bd27.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_656f366a539cf734f6c2bd27.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_656f366a539cf734f6c2bd27.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-698639d278e0d8c2d7d4d26e">
+      <h3>698639d278e0d8c2d7d4d26e</h3>
+      <div class="stats">
+        <span>Score: <strong>20</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">5 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_698639d278e0d8c2d7d4d26e.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_698639d278e0d8c2d7d4d26e.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_698639d278e0d8c2d7d4d26e.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6604664cb53a76971c8a1dce">
+      <h3>6604664cb53a76971c8a1dce</h3>
+      <div class="stats">
+        <span>Score: <strong>18</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 19</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>18</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">19 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6604664cb53a76971c8a1dce.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6604664cb53a76971c8a1dce.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6604664cb53a76971c8a1dce.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-674bea1eb044fbe75795fef1">
+      <h3>674bea1eb044fbe75795fef1</h3>
+      <div class="stats">
+        <span>Score: <strong>18</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 copy events; 4 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_674bea1eb044fbe75795fef1.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_674bea1eb044fbe75795fef1.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_674bea1eb044fbe75795fef1.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6991551b7b0c4970e11f07db">
+      <h3>6991551b7b0c4970e11f07db</h3>
+      <div class="stats">
+        <span>Score: <strong>17</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 58</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>17</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">58 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6991551b7b0c4970e11f07db.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6991551b7b0c4970e11f07db.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6991551b7b0c4970e11f07db.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69695461bdac36c31832f4a5">
+      <h3>69695461bdac36c31832f4a5</h3>
+      <div class="stats">
+        <span>Score: <strong>16</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">4 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69695461bdac36c31832f4a5.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69695461bdac36c31832f4a5.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69695461bdac36c31832f4a5.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-672bbb444ab4546a33718004">
+      <h3>672bbb444ab4546a33718004</h3>
+      <div class="stats">
+        <span>Score: <strong>15</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 22</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>15</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">22 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_672bbb444ab4546a33718004.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_672bbb444ab4546a33718004.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_672bbb444ab4546a33718004.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-65ccca52871269168cc029b5">
+      <h3>65ccca52871269168cc029b5</h3>
+      <div class="stats">
+        <span>Score: <strong>14</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 4</span>
+        <span>Fast typing: 3</span>
+        <span>Soft score (session): <strong>6</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">4 tab-aways; fast typing on 3 trials; 2 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_65ccca52871269168cc029b5.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_65ccca52871269168cc029b5.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_65ccca52871269168cc029b5.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-628f827eeb876ed2617881e7">
+      <h3>628f827eeb876ed2617881e7</h3>
+      <div class="stats">
+        <span>Score: <strong>13</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 8</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>4</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 1</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">8 tab-aways; 1 sidebar event; 2 layout shifts; 1 synthetic insertions</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          <div><strong>Sidebar events (1):</strong><ul><li><code>426128.30000000447</code> — gap 725px</li></ul></div>
+          
+          <div><strong>Other:</strong><ul>
+            <li>2 layout shifts</li>
+            
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_628f827eeb876ed2617881e7.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_628f827eeb876ed2617881e7.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_628f827eeb876ed2617881e7.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67a8ef6331f586a361a8ec33">
+      <h3>67a8ef6331f586a361a8ec33</h3>
+      <div class="stats">
+        <span>Score: <strong>13</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 32</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>13</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">32 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67a8ef6331f586a361a8ec33.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67a8ef6331f586a361a8ec33.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67a8ef6331f586a361a8ec33.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-583ef6f5ad2f4300014b358d">
+      <h3>583ef6f5ad2f4300014b358d</h3>
+      <div class="stats">
+        <span>Score: <strong>12</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 3</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 tab-aways; 3 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_583ef6f5ad2f4300014b358d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_583ef6f5ad2f4300014b358d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_583ef6f5ad2f4300014b358d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-663b810a9d37219004ad9fbd">
+      <h3>663b810a9d37219004ad9fbd</h3>
+      <div class="stats">
+        <span>Score: <strong>12</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 17</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>12</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">17 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_663b810a9d37219004ad9fbd.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_663b810a9d37219004ad9fbd.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_663b810a9d37219004ad9fbd.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-673feeafa80a279f5cc63e33">
+      <h3>673feeafa80a279f5cc63e33</h3>
+      <div class="stats">
+        <span>Score: <strong>12</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_673feeafa80a279f5cc63e33.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_673feeafa80a279f5cc63e33.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_673feeafa80a279f5cc63e33.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-607668ac450fc6e3025a131d">
+      <h3>607668ac450fc6e3025a131d</h3>
+      <div class="stats">
+        <span>Score: <strong>10</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 13</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>10</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">13 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_607668ac450fc6e3025a131d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_607668ac450fc6e3025a131d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_607668ac450fc6e3025a131d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-654beb18b762f5afea837c8b">
+      <h3>654beb18b762f5afea837c8b</h3>
+      <div class="stats">
+        <span>Score: <strong>8</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 9</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>8</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 copy events; 9 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_654beb18b762f5afea837c8b.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_654beb18b762f5afea837c8b.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_654beb18b762f5afea837c8b.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6978bda2039ef7c2454998b0">
+      <h3>6978bda2039ef7c2454998b0</h3>
+      <div class="stats">
+        <span>Score: <strong>8</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 13</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>8</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">13 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6978bda2039ef7c2454998b0.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6978bda2039ef7c2454998b0.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6978bda2039ef7c2454998b0.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5d5a48a67ca41f0001e97f8b">
+      <h3>5d5a48a67ca41f0001e97f8b</h3>
+      <div class="stats">
+        <span>Score: <strong>7</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 3</span>
+        <span>Fast typing: 1</span>
+        <span>Soft score (session): <strong>3</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 tab-aways; fast typing on 1 trials; 1 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5d5a48a67ca41f0001e97f8b.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5d5a48a67ca41f0001e97f8b.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5d5a48a67ca41f0001e97f8b.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-695ba87da7fb579427f4b67c">
+      <h3>695ba87da7fb579427f4b67c</h3>
+      <div class="stats">
+        <span>Score: <strong>6</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 3</span>
+        <span>Soft score (session): <strong>6</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">fast typing on 3 trials</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_695ba87da7fb579427f4b67c.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_695ba87da7fb579427f4b67c.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_695ba87da7fb579427f4b67c.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-663ece769c3a32475d274c94">
+      <h3>663ece769c3a32475d274c94</h3>
+      <div class="stats">
+        <span>Score: <strong>4</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_663ece769c3a32475d274c94.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_663ece769c3a32475d274c94.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_663ece769c3a32475d274c94.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66f58c9493251ae2f43ef088">
+      <h3>66f58c9493251ae2f43ef088</h3>
+      <div class="stats">
+        <span>Score: <strong>4</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways; 1 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66f58c9493251ae2f43ef088.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66f58c9493251ae2f43ef088.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66f58c9493251ae2f43ef088.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-676f0bdedfb3362f560115f0">
+      <h3>676f0bdedfb3362f560115f0</h3>
+      <div class="stats">
+        <span>Score: <strong>4</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 2</span>
+        <span>Soft score (session): <strong>4</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways; fast typing on 2 trials</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_676f0bdedfb3362f560115f0.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_676f0bdedfb3362f560115f0.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_676f0bdedfb3362f560115f0.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-678e7fc78628897e2a92bd42">
+      <h3>678e7fc78628897e2a92bd42</h3>
+      <div class="stats">
+        <span>Score: <strong>4</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 5</span>
+        <span>Fast typing: 1</span>
+        <span>Soft score (session): <strong>4</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">5 tab-aways; fast typing on 1 trials</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_678e7fc78628897e2a92bd42.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_678e7fc78628897e2a92bd42.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_678e7fc78628897e2a92bd42.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69b2dfa3578726afc01d223c">
+      <h3>69b2dfa3578726afc01d223c</h3>
+      <div class="stats">
+        <span>Score: <strong>4</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 synthetic insertions</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69b2dfa3578726afc01d223c.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69b2dfa3578726afc01d223c.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69b2dfa3578726afc01d223c.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66c3366a3b5834b89124e85a">
+      <h3>66c3366a3b5834b89124e85a</h3>
+      <div class="stats">
+        <span>Score: <strong>3</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 3</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>3</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66c3366a3b5834b89124e85a.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66c3366a3b5834b89124e85a.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66c3366a3b5834b89124e85a.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6614a5298c82365421d9b0b9">
+      <h3>6614a5298c82365421d9b0b9</h3>
+      <div class="stats">
+        <span>Score: <strong>2</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6614a5298c82365421d9b0b9.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6614a5298c82365421d9b0b9.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6614a5298c82365421d9b0b9.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-664ec4ec38b0fba80d81b607">
+      <h3>664ec4ec38b0fba80d81b607</h3>
+      <div class="stats">
+        <span>Score: <strong>2</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_664ec4ec38b0fba80d81b607.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_664ec4ec38b0fba80d81b607.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_664ec4ec38b0fba80d81b607.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-695ed617f5fe15c661e8e5f8">
+      <h3>695ed617f5fe15c661e8e5f8</h3>
+      <div class="stats">
+        <span>Score: <strong>2</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 8</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">8 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_695ed617f5fe15c661e8e5f8.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_695ed617f5fe15c661e8e5f8.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_695ed617f5fe15c661e8e5f8.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6990045689cf6bafc0d83c99">
+      <h3>6990045689cf6bafc0d83c99</h3>
+      <div class="stats">
+        <span>Score: <strong>2</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>2</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 copy events; 2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6990045689cf6bafc0d83c99.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6990045689cf6bafc0d83c99.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6990045689cf6bafc0d83c99.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69ae70d4471a238f4194f006">
+      <h3>69ae70d4471a238f4194f006</h3>
+      <div class="stats">
+        <span>Score: <strong>2</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 layout shifts; 1 zoom changes</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          
+          
+          <div><strong>Other:</strong><ul>
+            <li>1 layout shifts</li>
+            <li>1 zoom changes</li>
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_69ae70d4471a238f4194f006.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69ae70d4471a238f4194f006.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69ae70d4471a238f4194f006.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-657619485d6869976045a220">
+      <h3>657619485d6869976045a220</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_657619485d6869976045a220.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_657619485d6869976045a220.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_657619485d6869976045a220.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66d1fdd400acfdbc181f41e0">
+      <h3>66d1fdd400acfdbc181f41e0</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66d1fdd400acfdbc181f41e0.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66d1fdd400acfdbc181f41e0.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66d1fdd400acfdbc181f41e0.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67ac5678d6ff3c43d30b333f">
+      <h3>67ac5678d6ff3c43d30b333f</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 layout shifts</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          
+          
+          <div><strong>Other:</strong><ul>
+            <li>1 layout shifts</li>
+            
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_67ac5678d6ff3c43d30b333f.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67ac5678d6ff3c43d30b333f.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67ac5678d6ff3c43d30b333f.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-696a7d8e7ecb7691c3c716e0">
+      <h3>696a7d8e7ecb7691c3c716e0</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 4</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">4 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_696a7d8e7ecb7691c3c716e0.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_696a7d8e7ecb7691c3c716e0.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_696a7d8e7ecb7691c3c716e0.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6994625b36e05aa72306754b">
+      <h3>6994625b36e05aa72306754b</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6994625b36e05aa72306754b.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6994625b36e05aa72306754b.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6994625b36e05aa72306754b.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6996e597cd2cb88b8ce0fcd7">
+      <h3>6996e597cd2cb88b8ce0fcd7</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 layout shifts</p>
+      
+      <div class="session-signals">
+        <h4>Session-level signals</h4>
+        <div class="session-grid">
+          
+          
+          
+          <div><strong>Other:</strong><ul>
+            <li>1 layout shifts</li>
+            
+            
+          </ul></div>
+        </div>
+      </div>
+      
+        <div class="images">
+          <img src="images/typing_profile_6996e597cd2cb88b8ce0fcd7.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6996e597cd2cb88b8ce0fcd7.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6996e597cd2cb88b8ce0fcd7.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69ab2b85eb4738c7033037f5">
+      <h3>69ab2b85eb4738c7033037f5</h3>
+      <div class="stats">
+        <span>Score: <strong>1</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>1</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69ab2b85eb4738c7033037f5.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69ab2b85eb4738c7033037f5.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69ab2b85eb4738c7033037f5.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5c5198da659655000168955d">
+      <h3>5c5198da659655000168955d</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5c5198da659655000168955d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5c5198da659655000168955d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5c5198da659655000168955d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5d453e8723a5bb0001492546">
+      <h3>5d453e8723a5bb0001492546</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5d453e8723a5bb0001492546.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5d453e8723a5bb0001492546.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5d453e8723a5bb0001492546.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-5e836a3c2598d409928dae31">
+      <h3>5e836a3c2598d409928dae31</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_5e836a3c2598d409928dae31.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_5e836a3c2598d409928dae31.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_5e836a3c2598d409928dae31.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6089714497c6a46ebdf12234">
+      <h3>6089714497c6a46ebdf12234</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6089714497c6a46ebdf12234.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6089714497c6a46ebdf12234.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6089714497c6a46ebdf12234.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6127c5e5db9bf1a49993c300">
+      <h3>6127c5e5db9bf1a49993c300</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6127c5e5db9bf1a49993c300.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6127c5e5db9bf1a49993c300.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6127c5e5db9bf1a49993c300.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-616c1cc2510fe9022f6577f8">
+      <h3>616c1cc2510fe9022f6577f8</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_616c1cc2510fe9022f6577f8.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_616c1cc2510fe9022f6577f8.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_616c1cc2510fe9022f6577f8.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-629e1738fcc7d0b6acfe5280">
+      <h3>629e1738fcc7d0b6acfe5280</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_629e1738fcc7d0b6acfe5280.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_629e1738fcc7d0b6acfe5280.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_629e1738fcc7d0b6acfe5280.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-62e7357284e65421d8f8b10f">
+      <h3>62e7357284e65421d8f8b10f</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_62e7357284e65421d8f8b10f.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_62e7357284e65421d8f8b10f.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_62e7357284e65421d8f8b10f.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-655f9bb3070d42d4bc67e866">
+      <h3>655f9bb3070d42d4bc67e866</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_655f9bb3070d42d4bc67e866.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_655f9bb3070d42d4bc67e866.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_655f9bb3070d42d4bc67e866.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-65959bfed43a65c4d24b7445">
+      <h3>65959bfed43a65c4d24b7445</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_65959bfed43a65c4d24b7445.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_65959bfed43a65c4d24b7445.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_65959bfed43a65c4d24b7445.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-65aed1505908860daee048ce">
+      <h3>65aed1505908860daee048ce</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_65aed1505908860daee048ce.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_65aed1505908860daee048ce.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_65aed1505908860daee048ce.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-660a807bfd49ee4957fad189">
+      <h3>660a807bfd49ee4957fad189</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_660a807bfd49ee4957fad189.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_660a807bfd49ee4957fad189.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_660a807bfd49ee4957fad189.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66312361cf5d4099e1330532">
+      <h3>66312361cf5d4099e1330532</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66312361cf5d4099e1330532.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66312361cf5d4099e1330532.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66312361cf5d4099e1330532.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6636db94fa3ed150c2d78447">
+      <h3>6636db94fa3ed150c2d78447</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6636db94fa3ed150c2d78447.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6636db94fa3ed150c2d78447.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6636db94fa3ed150c2d78447.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-669ed03f13f57e07092e1877">
+      <h3>669ed03f13f57e07092e1877</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_669ed03f13f57e07092e1877.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_669ed03f13f57e07092e1877.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_669ed03f13f57e07092e1877.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66a9843c53827f826e9738ed">
+      <h3>66a9843c53827f826e9738ed</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66a9843c53827f826e9738ed.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66a9843c53827f826e9738ed.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66a9843c53827f826e9738ed.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-66aa83dd5d34973838c99ad3">
+      <h3>66aa83dd5d34973838c99ad3</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_66aa83dd5d34973838c99ad3.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_66aa83dd5d34973838c99ad3.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_66aa83dd5d34973838c99ad3.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67055b370e3c0c4965a03128">
+      <h3>67055b370e3c0c4965a03128</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67055b370e3c0c4965a03128.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67055b370e3c0c4965a03128.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67055b370e3c0c4965a03128.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-671e55aeca0216c5762de35a">
+      <h3>671e55aeca0216c5762de35a</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 1</span>
+        <span>Tab-aways: 2</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 paste events; 2 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_671e55aeca0216c5762de35a.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_671e55aeca0216c5762de35a.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_671e55aeca0216c5762de35a.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-672adb2909ca72744f212a7d">
+      <h3>672adb2909ca72744f212a7d</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_672adb2909ca72744f212a7d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_672adb2909ca72744f212a7d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_672adb2909ca72744f212a7d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-674cca92742faa4642a6e9c7">
+      <h3>674cca92742faa4642a6e9c7</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_674cca92742faa4642a6e9c7.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_674cca92742faa4642a6e9c7.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_674cca92742faa4642a6e9c7.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-674f7e1ff586e9a262cf1a06">
+      <h3>674f7e1ff586e9a262cf1a06</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_674f7e1ff586e9a262cf1a06.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_674f7e1ff586e9a262cf1a06.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_674f7e1ff586e9a262cf1a06.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6751acc5dc78128951a34f1f">
+      <h3>6751acc5dc78128951a34f1f</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6751acc5dc78128951a34f1f.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6751acc5dc78128951a34f1f.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6751acc5dc78128951a34f1f.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-677325421675c69275202d2d">
+      <h3>677325421675c69275202d2d</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_677325421675c69275202d2d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_677325421675c69275202d2d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_677325421675c69275202d2d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67758b914f06b14a31669644">
+      <h3>67758b914f06b14a31669644</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67758b914f06b14a31669644.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67758b914f06b14a31669644.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67758b914f06b14a31669644.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-678a880bfee0c5ee7400ac1b">
+      <h3>678a880bfee0c5ee7400ac1b</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_678a880bfee0c5ee7400ac1b.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_678a880bfee0c5ee7400ac1b.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_678a880bfee0c5ee7400ac1b.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67c869872204b85d6c4c0749">
+      <h3>67c869872204b85d6c4c0749</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67c869872204b85d6c4c0749.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67c869872204b85d6c4c0749.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67c869872204b85d6c4c0749.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-67f02740d233a50f479c4e20">
+      <h3>67f02740d233a50f479c4e20</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_67f02740d233a50f479c4e20.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_67f02740d233a50f479c4e20.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_67f02740d233a50f479c4e20.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6941ad1c7e8b932ff5e7e7ee">
+      <h3>6941ad1c7e8b932ff5e7e7ee</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6941ad1c7e8b932ff5e7e7ee.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6941ad1c7e8b932ff5e7e7ee.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6941ad1c7e8b932ff5e7e7ee.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6942e1d634d37d8b56f47144">
+      <h3>6942e1d634d37d8b56f47144</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6942e1d634d37d8b56f47144.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6942e1d634d37d8b56f47144.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6942e1d634d37d8b56f47144.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6970cdebc8c497d744a5381d">
+      <h3>6970cdebc8c497d744a5381d</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6970cdebc8c497d744a5381d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6970cdebc8c497d744a5381d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6970cdebc8c497d744a5381d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-697cac7d3bedace54477eb48">
+      <h3>697cac7d3bedace54477eb48</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_697cac7d3bedace54477eb48.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_697cac7d3bedace54477eb48.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_697cac7d3bedace54477eb48.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-697cfc324ea85aa42cfe2d1e">
+      <h3>697cfc324ea85aa42cfe2d1e</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_697cfc324ea85aa42cfe2d1e.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_697cfc324ea85aa42cfe2d1e.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_697cfc324ea85aa42cfe2d1e.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-697ee21d810562534a148c96">
+      <h3>697ee21d810562534a148c96</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_697ee21d810562534a148c96.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_697ee21d810562534a148c96.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_697ee21d810562534a148c96.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-698158ae43afcea4f821069c">
+      <h3>698158ae43afcea4f821069c</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_698158ae43afcea4f821069c.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_698158ae43afcea4f821069c.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_698158ae43afcea4f821069c.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6985f4fbf0d138e1b1231702">
+      <h3>6985f4fbf0d138e1b1231702</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6985f4fbf0d138e1b1231702.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6985f4fbf0d138e1b1231702.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6985f4fbf0d138e1b1231702.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69869e412b0c8dcba46bfc1e">
+      <h3>69869e412b0c8dcba46bfc1e</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69869e412b0c8dcba46bfc1e.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69869e412b0c8dcba46bfc1e.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69869e412b0c8dcba46bfc1e.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-698d21c653f9cfdb05a407bf">
+      <h3>698d21c653f9cfdb05a407bf</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_698d21c653f9cfdb05a407bf.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_698d21c653f9cfdb05a407bf.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_698d21c653f9cfdb05a407bf.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-699256aeba8067767183a7cb">
+      <h3>699256aeba8067767183a7cb</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 3</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">3 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_699256aeba8067767183a7cb.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_699256aeba8067767183a7cb.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_699256aeba8067767183a7cb.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-6995b9e346fe1f796fe97714">
+      <h3>6995b9e346fe1f796fe97714</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_6995b9e346fe1f796fe97714.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_6995b9e346fe1f796fe97714.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_6995b9e346fe1f796fe97714.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-699639261d37728e7e93d15d">
+      <h3>699639261d37728e7e93d15d</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_699639261d37728e7e93d15d.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_699639261d37728e7e93d15d.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_699639261d37728e7e93d15d.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-699f8d117bdd818763e3d681">
+      <h3>699f8d117bdd818763e3d681</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_699f8d117bdd818763e3d681.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_699f8d117bdd818763e3d681.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_699f8d117bdd818763e3d681.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69a0734d1d433d3694c8438f">
+      <h3>69a0734d1d433d3694c8438f</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69a0734d1d433d3694c8438f.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69a0734d1d433d3694c8438f.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69a0734d1d433d3694c8438f.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69a5173e79a786eadc643c31">
+      <h3>69a5173e79a786eadc643c31</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 1</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">1 tab-aways</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69a5173e79a786eadc643c31.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69a5173e79a786eadc643c31.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69a5173e79a786eadc643c31.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69a5fc5bad47d7743c2f5272">
+      <h3>69a5fc5bad47d7743c2f5272</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69a5fc5bad47d7743c2f5272.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69a5fc5bad47d7743c2f5272.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69a5fc5bad47d7743c2f5272.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69ac7aca3a3e9276cf2c2499">
+      <h3>69ac7aca3a3e9276cf2c2499</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69ac7aca3a3e9276cf2c2499.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69ac7aca3a3e9276cf2c2499.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69ac7aca3a3e9276cf2c2499.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69b306d0aabcb968f7ca7ec5">
+      <h3>69b306d0aabcb968f7ca7ec5</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69b306d0aabcb968f7ca7ec5.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69b306d0aabcb968f7ca7ec5.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69b306d0aabcb968f7ca7ec5.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69bea3c85966363463cb1745">
+      <h3>69bea3c85966363463cb1745</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69bea3c85966363463cb1745.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69bea3c85966363463cb1745.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69bea3c85966363463cb1745.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69c4aeb0b0f33c156c6d7558">
+      <h3>69c4aeb0b0f33c156c6d7558</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69c4aeb0b0f33c156c6d7558.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69c4aeb0b0f33c156c6d7558.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69c4aeb0b0f33c156c6d7558.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69c537b07e8a80ec37477bd4">
+      <h3>69c537b07e8a80ec37477bd4</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69c537b07e8a80ec37477bd4.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69c537b07e8a80ec37477bd4.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69c537b07e8a80ec37477bd4.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69c55b66d8ade7f9bd6109d6">
+      <h3>69c55b66d8ade7f9bd6109d6</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69c55b66d8ade7f9bd6109d6.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69c55b66d8ade7f9bd6109d6.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69c55b66d8ade7f9bd6109d6.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69c5d21edb1054599e74d625">
+      <h3>69c5d21edb1054599e74d625</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69c5d21edb1054599e74d625.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69c5d21edb1054599e74d625.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69c5d21edb1054599e74d625.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <section class="participant" id="p-69c70b2ae3a40492f22627e3">
+      <h3>69c70b2ae3a40492f22627e3</h3>
+      <div class="stats">
+        <span>Score: <strong>0</strong></span>
+        <span>Hard: <strong>no</strong></span>
+        <span>Trials: 15</span>
+        <span>Paste: 0</span>
+        <span>Tab-aways: 0</span>
+        <span>Fast typing: 0</span>
+        <span>Soft score (session): <strong>0</strong></span>
+        <span>Edge exits: 0</span>
+        <span>Extensions: 0</span>
+        <span>Sidebar events: 0</span>
+        <span>Kb shortcuts: 0</span>
+      </div>
+      <p class="reason">clean</p>
+      
+      
+        <div class="images">
+          <img src="images/typing_profile_69c70b2ae3a40492f22627e3.png" alt="Typing profile" onerror="this.style.display='none'">
+          <img src="images/tab_timeline_69c70b2ae3a40492f22627e3.png" alt="Tab timeline" onerror="this.style.display='none'">
+          <img src="images/trajectories_69c70b2ae3a40492f22627e3.png" alt="Mouse trajectories" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+  <p class="meta">Generated by cyborg-hunter v0.3.0</p>
+
+  <script>
+    // Vanilla JS table sorting — no dependencies
+    function sortTable(col, type) {
+      const table = document.getElementById('triage-table');
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const dir = table.dataset.sortCol == col && table.dataset.sortDir == 'asc' ? 'desc' : 'asc';
+      table.dataset.sortCol = col;
+      table.dataset.sortDir = dir;
+
+      rows.sort((a, b) => {
+        let av = a.cells[col].textContent.trim();
+        let bv = b.cells[col].textContent.trim();
+        if (type === 'num') { av = parseFloat(av) || 0; bv = parseFloat(bv) || 0; }
+        if (av < bv) return dir === 'asc' ? -1 : 1;
+        if (av > bv) return dir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    function scrollToParticipant(id) {
+      const el = document.getElementById('p-' + id.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 40));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+  <a href="#top" class="back-to-top">↑ Top</a>
+</body>
+</html>
